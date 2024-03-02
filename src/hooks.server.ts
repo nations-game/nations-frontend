@@ -13,9 +13,24 @@ export const handle = (async ({ event, resolve }) => {
             }
         });
 
-        const user = await userResponse.json();
+        const json = await userResponse.json();
+        const user = json.details;
         if(user.id) {
             event.locals.user = user;
+
+            const nationId = user.nation_id;
+            if(nationId !== null) {
+                const nationResponse = await event.fetch(`$api/nation/info`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Cookie": event.locals.preparedCookie
+                    }
+                });
+
+                const nationJson = await nationResponse.json();
+                user.nation = nationJson.details;
+            }
         }
     }
 

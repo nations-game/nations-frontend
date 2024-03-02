@@ -1,14 +1,11 @@
 <script lang="ts">
     import { AppShell, AppBar, Avatar, popup } from "@skeletonlabs/skeleton";
     import type { PopupSettings } from "@skeletonlabs/skeleton";
+    import type { User } from "$lib/types/models";
+    import { page } from "$app/stores";
 
-    let nation = {
-        name: "Testonia"
-    };
-
-    let user = {
-        username: "TestUser"
-    };
+    export let data;
+    let user = data.user;
 
     const dropdownMenu: PopupSettings  = {
         event: "click",
@@ -30,9 +27,9 @@
 	<svelte:fragment slot="pageHeader">
         <AppBar>
             <svelte:fragment slot="lead">
-                <Avatar initials="{nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
+                <Avatar initials="{user.nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
             </svelte:fragment>
-            <h3 class="h3">{nation.name}</h3>
+            <h3 class="h3">{user.nation.name}</h3>
             <svelte:fragment slot="trail">
                 <button class="btn variant-filled" use:popup={dropdownMenu}>
                     {user.username}
@@ -53,14 +50,14 @@
 	<slot />
 
 	<svelte:fragment slot="footer">
-        <AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
-            <svelte:fragment slot="lead">
-                <strong>M</strong> 50.0k
-                <strong>F</strong> 50.0k
-                <strong>P</strong> 50.0k
-                <strong>BM</strong> 50.0k
-                <strong>M</strong> 50.0k
-                <strong>CG</strong> 50.0k
+        <AppBar>
+            <svelte:fragment>
+                <strong>M</strong> {user.nation.money}
+                <strong>F</strong> {user.nation.food}
+                <strong>P</strong> {user.nation.power}
+                <strong>BM</strong> {user.nation.buildingMaterials}
+                <strong>M</strong> {user.nation.metal}
+                <strong>CG</strong> {user.nation.consumerGoods}
             </svelte:fragment>
         </AppBar>
     </svelte:fragment>

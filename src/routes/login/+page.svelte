@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
 
-    let email: string;
+    let username: string;
     let password: string;
 </script>
 
@@ -19,9 +19,9 @@
     </header>
     <div class="card p-6 space-y-6 shadow-xl text-left">
         <form action="" method="POST" class="space-y-4">
-            <label class="label" for="email">
-                <span>Email</span>
-                <input id="email" name="email" type="email" placeholder="Email" class="input" bind:value={email} />
+            <label class="label" for="username">
+                <span>Username</span>
+                <input id="username" name="username" type="text" placeholder="Username" class="input" bind:value={username} />
             </label>
             <label class="label" for="password">
                 <span>Password</span>
