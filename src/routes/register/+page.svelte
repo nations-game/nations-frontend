@@ -39,7 +39,7 @@
                 <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Password" class="input" bind:value={confirmPassword} />
             </label>
             <label class="inline-flex items-center">
-                <input type="checkbox" class="checkbox" bind:value={acceptedTos} />
+                <input id="acceptedTos" name="acceptedTos" type="checkbox" class="checkbox" bind:checked={acceptedTos} />
                 <span class="ml-2">I accept the Terms and Conditions</span>
             </label>
             <button type="submit" class="btn variant-filled-primary w-full">Register</button>
