@@ -14,7 +14,7 @@ export type Nation = {
     metal: number;
     consumerGoods: number;
 
-    taxesToCollect: number;
+    pendingTaxes: number;
 
     leader: User;
 }

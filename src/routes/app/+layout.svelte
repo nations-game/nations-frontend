@@ -13,6 +13,14 @@
         placement: "bottom-end"
     };
 
+    const formatNumber = (num: number) => {
+        if (num >= 1000) {
+            return (num / 1000).toFixed(1) + "k";
+        } else {
+            return num.toString();
+        }
+    }
+
 </script>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
@@ -51,15 +59,25 @@
 	<slot />
 
 	<svelte:fragment slot="footer">
-        <AppBar>
-            <svelte:fragment>
-                <strong>M</strong> {user.nation.money}
-                <strong>F</strong> {user.nation.food}
-                <strong>P</strong> {user.nation.power}
-                <strong>BM</strong> {user.nation.buildingMaterials}
-                <strong>M</strong> {user.nation.metal}
-                <strong>CG</strong> {user.nation.consumerGoods}
-            </svelte:fragment>
-        </AppBar>
+        <div class="p-4 space-x-4 flex">
+            <div class="flex items-center">
+                <img src="/icons/money_icon.png" alt="Money" class="mr-1">{formatNumber(user.nation.money)}
+            </div>
+            <div class="flex items-center">
+                <img src="/icons/food_icon.png" alt="Food" class="mr-1">{formatNumber(user.nation.food)}
+            </div>
+            <div class="flex items-center">
+                <img src="/icons/power_icon.png" alt="Power" class="mr-1">{formatNumber(user.nation.power)}
+            </div>
+            <div class="flex items-center">
+                <img src="/icons/bm_icon.png" alt="Building Materials" class="mr-1">{formatNumber(user.nation.buildingMaterials)}
+            </div>
+            <div class="flex items-center">
+                <img src="/icons/metal_icon.png" alt="Metal" class="mr-1">{formatNumber(user.nation.metal)}
+            </div>
+            <div class="flex items-center">
+                <img src="/icons/cg_icon.png" alt="Consumer Goods" class="mr-1">{formatNumber(user.nation.consumerGoods)}
+            </div>
+        </div>
     </svelte:fragment>
 </AppShell>

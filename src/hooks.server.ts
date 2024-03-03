@@ -1,4 +1,5 @@
 import type { Handle, HandleFetch } from "@sveltejs/kit";
+import { API_URL } from "$lib";
 
 export const handle = (async ({ event, resolve }) => {
     if(event.cookies.get("sessionID") !== undefined) {
@@ -37,10 +38,10 @@ export const handle = (async ({ event, resolve }) => {
     return resolve(event);
 }) satisfies Handle;
 
-export const handleFetch: HandleFetch = async ({request, fetch}) => {
+export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
     if (request.url.includes("$api/")) {
         let requestUrl = request.url.split("$api/")[1];
-        requestUrl = `http://127.0.0.1:8000/api/${requestUrl}`;
+        requestUrl = `${API_URL}/${requestUrl}`;
 
         let options: any = {
             method: request.method,
