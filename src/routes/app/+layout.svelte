@@ -11,7 +11,8 @@
         event: "click",
         target: "dropdownMenu",
         placement: "bottom-end"
-    }
+    };
+
 </script>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
