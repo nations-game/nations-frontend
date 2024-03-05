@@ -27,8 +27,8 @@
     <svelte:fragment slot="sidebarLeft">
         <nav class="list-nav">
             <ul>
-                <li><a href="/">Home</a></li>
-                <li><a href="/about">About</a></li>
+                <li><a href="/app">Overview</a></li>
+                <li><a href="/app/factories">Factories</a></li>
             </ul>
         </nav>
     </svelte:fragment>
