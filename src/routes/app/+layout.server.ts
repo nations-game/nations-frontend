@@ -33,8 +33,19 @@ export const load: LayoutServerLoad = async ({ locals, fetch }) => {
                 }
             });
 
+            const factoryResponse = await fetch("$api/nation/factories", {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Cookie": locals.preparedCookie
+                }
+            });
+
             const nationJson = await nationResponse.json();
             user.nation = nationJson.details;
+
+            const factoryJson = await factoryResponse.json();
+            user.nation.factories = factoryJson.details;
         }
     }
 

@@ -3,7 +3,7 @@ import type { RequestHandler } from "./$types";
 
 export const POST: RequestHandler = async ({ fetch, request }) => {
 	const { factoryID, preparedCookie } = await request.json();
-    const response = await fetch("$api/factories/build/", {
+    const response = await fetch("$api/factories/collect", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -16,6 +16,6 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
     if(response.ok) {
 	    return json(respJson);
     } else {
-	    return json({ message: "Couldn't build factory!", details: respJson });
+	    return json({ message: "Couldn't collect from factory!", details: respJson });
     }
 };

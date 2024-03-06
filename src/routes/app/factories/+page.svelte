@@ -1,11 +1,18 @@
 <script lang="ts">
     import { getIconFromCommodity } from "$lib/utils.js";
+    import { Toast, getToastStore } from "@skeletonlabs/skeleton";
+    import type { ToastSettings, ToastStore } from "@skeletonlabs/skeleton";
+
+    const toastStore = getToastStore();
 
     export let data;
     const factories = data.factories;
     const preparedCookie = data.preparedCookie;
 
+    let buildButtonDisabed = false;
+
     const buildFactory = async (factoryID: string) => {
+        buildButtonDisabed = true;
         const response = await fetch("/app/factories/build", {
             method: "POST",
             headers: {
@@ -17,12 +24,22 @@
                 "preparedCookie": preparedCookie
             })
         });
-
-        const text = await response.text();
-        console.log(text)
-
-        const json = await response.json();
-        console.log(json)
+        if(response.ok) {
+            const t: ToastSettings = {
+                message: "Built factory!",
+                timeout: 2000
+            };
+            toastStore.trigger(t);
+        } else {
+            const json = await response.json();
+            const t: ToastSettings = {
+                message: `Error building factory: ${json.details}`,
+                timeout: 2000,
+                background: "variant-filled-error"
+            };
+            toastStore.trigger(t);
+        }
+        buildButtonDisabed = false;
     }
 </script>
 
@@ -81,9 +98,8 @@
             </section>
 
             <footer class="card-footer">
-                <!--TODO: Implement logic for this so it doesn't reload the page-->
-                <button class="btn btn-md variant-filled" on:click={async () => { await buildFactory(factory.id); }}>Build</button>
+                <button disabled={buildButtonDisabed} class="btn btn-md variant-filled" on:click={async () => { await buildFactory(factory.id); }}>Build</button>
             </footer>
-        </div>         
+        </div>    
     {/each}
 </div>

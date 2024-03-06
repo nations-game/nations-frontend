@@ -17,6 +17,8 @@ export type Nation = {
     pendingTaxes: number;
 
     leader: User;
+
+    factories: any;
 }
 
 export type User = {
