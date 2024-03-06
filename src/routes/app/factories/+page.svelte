@@ -6,6 +6,23 @@
     const preparedCookie = data.preparedCookie;
 
     const buildFactory = async (factoryID: string) => {
+        const response = await fetch("/app/factories/build", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cookie": preparedCookie
+            },
+            body: JSON.stringify({ 
+                "factoryID": factoryID,
+                "preparedCookie": preparedCookie
+            })
+        });
+
+        const text = await response.text();
+        console.log(text)
+
+        const json = await response.json();
+        console.log(json)
     }
 </script>
 
