@@ -14,7 +14,6 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     const factories = json.details;
 
     return {
-        factories: factories,
-        preparedCookie: locals.preparedCookie
+        factories: factories
     };
 };

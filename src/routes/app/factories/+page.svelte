@@ -3,6 +3,10 @@
 
     export let data;
     const factories = data.factories;
+    const preparedCookie = data.preparedCookie;
+
+    const buildFactory = async (factoryID: string) => {
+    }
 </script>
 
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
@@ -61,7 +65,7 @@
 
             <footer class="card-footer">
                 <!--TODO: Implement logic for this so it doesn't reload the page-->
-                <button class="btn btn-md variant-filled">Build</button>
+                <button class="btn btn-md variant-filled" on:click={async () => { await buildFactory(factory.id); }}>Build</button>
             </footer>
         </div>         
     {/each}

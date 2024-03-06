@@ -39,6 +39,7 @@ export const handle = (async ({ event, resolve }) => {
 }) satisfies Handle;
 
 export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
+    console.log(request.url, request.method)
     if (request.url.includes("$api/")) {
         let requestUrl = request.url.split("$api/")[1];
         requestUrl = `${API_URL}/${requestUrl}`;
@@ -60,6 +61,8 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
         const isBodyAllowed = request.method === "POST"
             || request.method === "PUT"
             || request.method === "PATCH";
+            
+        console.log(requestUrl, request.method)
 
         if (isBodyAllowed) {
             options = {
@@ -68,7 +71,7 @@ export const handleFetch: HandleFetch = async ({ event, request, fetch }) => {
             };
         }
 
-        return fetch(requestUrl, options);
+        return await fetch(requestUrl, options);
     }
-    return fetch(request);
+    return await fetch(request);
 };
