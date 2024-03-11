@@ -121,7 +121,15 @@
 </div>
 
 {#if data.user.nation.factories.length > 0}
-    <h1 class="px-11 text-2xl">My Factories</h1>
+    <h1 class="px-11 text-2xl">
+        My Factories
+        <button disabled={collectButtonsDisabled} class="btn btn-sm variant-filled" on:click={async () => {
+            for(let factory of data.user.nation.factories) {
+                await collectFromFactory(factory.info.id);
+                factory.ticks_run = 0;
+            }
+        }}>Collect All</button>
+    </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-10 py-2">
         {#each data.user.nation.factories as factory}
             <div class="card">

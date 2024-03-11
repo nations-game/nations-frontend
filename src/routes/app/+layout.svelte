@@ -17,7 +17,6 @@
                 }
             });
             const json = await resp.json();
-            // console.log(json);
             user = json.user;
         }, 5000);
 
@@ -57,18 +56,10 @@
             </svelte:fragment>
             <h3 class="h3">{user.nation.name}</h3>
             <svelte:fragment slot="trail">
+                <!--Not sure what we're going to do with this yet. Probably user settings or mail.-->
                 <button class="btn variant-filled" use:popup={dropdownMenu}>
                     {user.username}
                 </button>
-                <div class="card p-4" data-popup="dropdownMenu">
-                    <nav class="list-nav">
-                        <ul>
-                            <li><a href="/">Home</a></li>
-                            <li><a href="/about">About</a></li>
-                        </ul>
-                    </nav>
-	                <div class="arrow" />
-                </div>
             </svelte:fragment>
         </AppBar>
     </svelte:fragment>
