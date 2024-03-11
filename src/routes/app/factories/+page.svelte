@@ -1,105 +1,39 @@
 <script lang="ts">
-    import { getIconFromCommodity } from "$lib/utils.js";
-    import { Toast, getToastStore } from "@skeletonlabs/skeleton";
-    import type { ToastSettings, ToastStore } from "@skeletonlabs/skeleton";
-
-    const toastStore = getToastStore();
+    import FactoryComponent from "./FactoryComponent.svelte";
 
     export let data;
     const factories = data.factories;
     const preparedCookie = data.preparedCookie;
 
+    const categories = [
+        ["food", "Food"],
+        ["power", "Power"],
+        ["cg", "Consumer Goods"],
+        ["bm", "Building Materials"]
+    ];
+
     let buildButtonDisabed = false;
 
-    const buildFactory = async (factoryID: string) => {
-        buildButtonDisabed = true;
-        const response = await fetch("/app/factories/build", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cookie": preparedCookie
-            },
-            body: JSON.stringify({ 
-                "factoryID": factoryID,
-                "preparedCookie": preparedCookie
-            })
-        });
-        if(response.ok) {
-            const t: ToastSettings = {
-                message: "Built factory!",
-                timeout: 2000
-            };
-            toastStore.trigger(t);
-        } else {
-            const json = await response.json();
-            const t: ToastSettings = {
-                message: `Error building factory: ${json.details}`,
-                timeout: 2000,
-                background: "variant-filled-error"
-            };
-            toastStore.trigger(t);
+    const getFactoriesByCategory = (category: string) => {
+        let categoryFactories: any[] = [];
+        for(let factory of factories) {
+            if(factory.category === category) {
+                categoryFactories.push(factory);
+            }
         }
-        buildButtonDisabed = false;
+        return categoryFactories;
     }
 </script>
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
-    {#each factories as factory}
-        <div class="card">
-            <header class="card-header text-2xl font-bold">
-                {factory.name}
-            </header>
-
-            <section class="p-4">
-                <div class="grid grid-cols-2 gap-4 items-baseline space-x-2">
-                    <div>
-                        <p class="font-bold text-l">Input</p>
-                        <ul>
-                            {#each factory.input as input}
-                                <li>
-                                    <div class="flex items-center">
-                                        <img src="{getIconFromCommodity(input.commodity)}" alt="{input.commodity}" class="mr-1"> 
-                                        {input.quantity}
-                                    </div>
-                                </li>
-                            {/each}
-                        </ul>
-                    </div>
-
-                    <div>
-                        <p class="font-bold text-l">Output</p>
-                        <ul>
-                            {#each factory.output as output}
-                                <li>
-                                    <div class="flex items-center">
-                                        <img src="{getIconFromCommodity(output.commodity)}" alt="{output.commodity}" class="mr-1"> 
-                                        {output.quantity}
-                                    </div>
-                                </li>
-                            {/each}
-                        </ul>
-                    </div>
-                </div>
-
-                
-                <div class="py-4">
-                    <p class="font-bold text-l">Cost</p>
-                    <ul>
-                        {#each factory.cost as cost}
-                            <li>
-                                <div class="flex items-center">
-                                    <img src="{getIconFromCommodity(cost.commodity)}" alt="{cost.commodity}" class="mr-1"> 
-                                    {cost.quantity}
-                                </div>
-                            </li>
-                        {/each}
-                    </ul>
-                </div>
-            </section>
-
-            <footer class="card-footer">
-                <button disabled={buildButtonDisabed} class="btn btn-md variant-filled" on:click={async () => { await buildFactory(factory.id); }}>Build</button>
-            </footer>
-        </div>    
+<div class="p-10">
+    {#each categories as [id, fullName]}
+        <div class="pb-5">
+            <h1 class="px-1 pb-1 text-2xl">{fullName}</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {#each getFactoriesByCategory(id) as factory}
+                    <FactoryComponent {factory} {buildButtonDisabed} {preparedCookie} />
+                {/each}
+            </div>
+        </div>
     {/each}
 </div>

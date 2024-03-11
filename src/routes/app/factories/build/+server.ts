@@ -16,6 +16,11 @@ export const POST: RequestHandler = async ({ fetch, request }) => {
     if(response.ok) {
 	    return json(respJson);
     } else {
-	    return json({ message: "Couldn't build factory!", details: respJson });
+        return new Response(JSON.stringify({ message: "Couldn't build factory!", details: respJson }), {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            status: 400
+        });
     }
 };

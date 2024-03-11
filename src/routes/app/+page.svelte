@@ -2,12 +2,28 @@
     import { getToastStore } from "@skeletonlabs/skeleton";
     import type { ToastSettings } from "@skeletonlabs/skeleton";
     import { getIconFromCommodity } from "$lib/utils";
+    import { onMount } from "svelte";
 
     const toastStore = getToastStore();
     export let data;
 
     let taxesButtonDisabled = false;
     let collectButtonsDisabled = false;
+
+    onMount(() => {
+        const interval = setInterval(async () => {
+            const resp = await fetch("/app/fullnationinfo", {
+                headers: {
+                    "Cookie": data.preparedCookie
+                }
+            });
+            const json = await resp.json();
+            // console.log(json);
+            data.user = json.user;
+        }, 5000);
+
+        return () => clearInterval(interval);
+    });
 
     const collectTaxes = async () => {
         taxesButtonDisabled = true;
@@ -21,21 +37,18 @@
                 "preparedCookie": data.preparedCookie
             })
         });
-        const json = await response.json();
         if(response.ok) {
-            data.user.nation = json.user.nation;
-            const t: ToastSettings = {
+            toastStore.trigger({
                 message: "Collected taxes!",
                 timeout: 2000
-            };
-            toastStore.trigger(t);
+            });
+            data.user.nation.pendingTaxes = 0;
         } else {
-            const t: ToastSettings = {
+            toastStore.trigger({
                 message: "Error collecting taxes.",
                 timeout: 2000,
                 background: "variant-filled-error"
-            };
-            toastStore.trigger(t);
+            });
         }
         taxesButtonDisabled = false;
     }
@@ -54,19 +67,17 @@
             })
         });
         if(response.ok) {
-            const t: ToastSettings = {
+            toastStore.trigger({
                 message: "Collected from factory!",
                 timeout: 2000
-            };
-            toastStore.trigger(t);
+            });
         } else {
             const json = await response.json();
-            const t: ToastSettings = {
+            toastStore.trigger({
                 message: `Error collecting from factory: ${json.details}`,
                 timeout: 2000,
                 background: "variant-filled-error"
-            };
-            toastStore.trigger(t);
+            });
         }
         collectButtonsDisabled = false;
     }
@@ -104,43 +115,45 @@
         </div>
         <div class="grid grid-cols-2 gap-4 items-baseline space-x-2">
             <div class="text-2xl font-bold place-self-start">${data.user.nation.pendingTaxes.toLocaleString("en", { useGrouping: true })}</div>
-            <button class="btn btn-sm variant-filled"  disabled={taxesButtonDisabled} on:click={collectTaxes}>Collect</button>
+            <button class="btn btn-sm variant-filled" disabled={taxesButtonDisabled} on:click={async () => { await collectTaxes(); }}>Collect</button>
         </div>
     </div>
 </div>
 
-<h1 class="px-11 text-2xl">My Factories</h1>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-10 py-2">
-    {#each data.user.nation.factories as factory}
-        <div class="card">
-            <header class="card-header text-2xl font-bold">
-                {factory.info.name}
-            </header>
+{#if data.user.nation.factories.length > 0}
+    <h1 class="px-11 text-2xl">My Factories</h1>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-10 py-2">
+        {#each data.user.nation.factories as factory}
+            <div class="card">
+                <header class="card-header text-2xl font-bold">
+                    {factory.info.name}
+                </header>
 
-            <section class="p-4">
-                <p class="text-l"><strong>Quantity:</strong> {factory.quantity}</p>
-                <p class="font-bold text-l">To Collect</p>
-                <ul>
-                    {#each factory.info.output as output}
-                        <li>
-                            <div class="flex items-center">
-                                <img src="{getIconFromCommodity(output.commodity)}" alt="{output.commodity}" class="mr-1"> 
-                                {output.quantity * factory.ticks_run}
-                            </div>
-                        </li>
-                    {/each}
-                </ul>
-            </section>
+                <section class="p-4">
+                    <p class="text-l"><strong>Quantity:</strong> {factory.quantity}</p>
+                    <p class="font-bold text-l">To Collect</p>
+                    <ul>
+                        {#each factory.info.output as output}
+                            <li>
+                                <div class="flex items-center">
+                                    <img src="{getIconFromCommodity(output.commodity)}" alt="{output.commodity}" class="mr-1"> 
+                                    {output.quantity * factory.ticks_run}
+                                </div>
+                            </li>
+                        {/each}
+                    </ul>
+                </section>
 
-            <footer class="card-footer">
-                <button disabled={collectButtonsDisabled} class="btn btn-md variant-filled" on:click={async () => { 
-                    await collectFromFactory(factory.info.id);
-                    factory.ticks_run = 0;
-                }}>Collect</button>
-            </footer>
-        </div>
-    {/each}
-</div>
+                <footer class="card-footer">
+                    <button disabled={collectButtonsDisabled} class="btn btn-md variant-filled" on:click={async () => { 
+                        await collectFromFactory(factory.info.id);
+                        factory.ticks_run = 0;
+                    }}>Collect</button>
+                </footer>
+            </div>
+        {/each}
+    </div>
+{/if}
 
 <style>
 	.wrapper {

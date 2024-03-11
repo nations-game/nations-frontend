@@ -3,9 +3,26 @@
     import type { PopupSettings } from "@skeletonlabs/skeleton";
     import type { User } from "$lib/types/models";
     import { page } from "$app/stores";
+    import { onMount } from "svelte";
 
     export let data;
-    let user = data.user;
+    $: user = data.user;
+
+
+    onMount(() => {
+        const interval = setInterval(async () => {
+            const resp = await fetch("/app/fullnationinfo", {
+                headers: {
+                    "Cookie": data.preparedCookie
+                }
+            });
+            const json = await resp.json();
+            // console.log(json);
+            user = json.user;
+        }, 5000);
+
+        return () => clearInterval(interval);
+    });
 
     const dropdownMenu: PopupSettings  = {
         event: "click",
