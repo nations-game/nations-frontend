@@ -1,0 +1,1 @@
+<a href="/login"><h1 class="link text-2xl">Login</h1></a>

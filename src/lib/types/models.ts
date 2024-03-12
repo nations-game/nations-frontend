@@ -19,6 +19,8 @@ export type Nation = {
     leader: User;
 
     factories: any;
+
+    allianceID: string;
 }
 
 export type User = {

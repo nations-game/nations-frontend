@@ -108,6 +108,16 @@
         </div>
     </div>
 
+    <!--Happiness card-->
+    <div class="card p-6 space-y-1">
+        <div class="flex justify-between opacity-50 items-center">
+            <div class="font-bold text-xs">Happiness</div>
+        </div>
+        <div class="flex items-baseline space-x-2">
+            <div class="text-2xl font-bold">{data.user.nation.happiness.toLocaleString("en")}</div>
+        </div>
+    </div>
+
     <!--Taxes card-->
     <div class="card p-6 space-y-1">
         <div class="flex justify-between opacity-50 items-center">

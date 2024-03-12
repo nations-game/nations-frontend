@@ -3,7 +3,6 @@ import { API_URL } from "$lib";
 
 export const handle = (async ({ event, resolve }) => {
     if(event.cookies.get("sessionID") !== undefined) {
-        console.log("a")
         event.locals.sessionID = event.cookies.get("sessionID") as string;
         event.locals.preparedCookie = `sessionid=${event.locals.sessionID}`;
 

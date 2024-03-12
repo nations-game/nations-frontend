@@ -43,8 +43,18 @@
     <svelte:fragment slot="sidebarLeft">
         <nav class="list-nav">
             <ul>
+                <!--Basic stuff-->
                 <li><a href="/app">Overview</a></li>
+
+                <!--Build stuff-->
+                <hr class="!border-t-1" />
                 <li><a href="/app/factories">Factories</a></li>
+                <li><a href="/app/buildings">Buildings</a></li>
+
+                <!--Diplomacy-->
+                <hr class="!border-t-1" />
+                <li><a href="/app/alliance">My Alliance</a></li>
+                <li><a href="/app/alliance/list">All Alliances</a></li>
             </ul>
         </nav>
     </svelte:fragment>
