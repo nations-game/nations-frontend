@@ -1,6 +1,14 @@
 <script lang="ts">
+    import { Avatar } from "@skeletonlabs/skeleton";
+    import { DataHandler } from "@vincjo/datatables";
+
     export let data;
     const alliance = data.alliance;
+
+
+    const members = alliance.members;
+    const handler = new DataHandler(members, { rowsPerPage: 5 });
+    const rows = handler.getRows(); 
 </script>
 
 {#if alliance !== ""}
@@ -16,7 +24,36 @@
     </div>
 
 
-    {JSON.stringify(alliance)}
+    <div class="p-10">
+        <h1 class="px-1 text-2xl">Members</h1>
+        <div class="table-container">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Leader</th>
+                        <th>Population</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {#each $rows as nation}
+                        <tr>
+                            <td>
+                                <div class="flex items-center space-x-2">
+                                    <Avatar initials="{nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
+                                    <span>{nation.name}</span>
+                                </div>
+                            </td>
+                            <td>{nation.leader_id}</td>
+                            <td>{nation.population}</td>
+                            <td>{nation.alliance_role[0].toUpperCase() + nation.alliance_role.slice(1)}</td>
+                        </tr>
+                    {/each}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {:else}
     <div class="p-10">
         <h1 class="text-2xl">Looks like you aren't a member of an alliance.</h1>

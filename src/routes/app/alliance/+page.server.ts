@@ -20,9 +20,22 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     });
 
     const json = await response.json();
-    console.log(json)
+
+    let alliance = json.details;
+
+    const membersResponse = await fetch("$api/alliance/members", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Cookie": locals.preparedCookie
+        },
+        body: JSON.stringify({ "id": allianceID })
+    });
+
+    const membersJson = await membersResponse.json();
+    alliance.members = membersJson.details;
 
     return {
-        alliance: json.details
+        alliance: alliance
     };
 };

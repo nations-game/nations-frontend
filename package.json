@@ -31,6 +31,7 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "^1.6.3",
+    "@vincjo/datatables": "^1.14.10",
     "svelte-hamburgers": "^4.2.0"
   }
 }
