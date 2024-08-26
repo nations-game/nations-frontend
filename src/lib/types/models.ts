@@ -5,6 +5,8 @@ export type Nation = {
     flag: string | null;
     happiness: number;
     system: number;
+    nationID: number;
+    leaderID: number;
 
     // Commodities
     money: number;

@@ -10,19 +10,15 @@
     let taxesButtonDisabled = false;
     let collectButtonsDisabled = false;
 
-    onMount(() => {
-        const interval = setInterval(async () => {
-            const resp = await fetch("/app/fullnationinfo", {
-                headers: {
-                    "Cookie": data.preparedCookie
-                }
-            });
-            const json = await resp.json();
-            // console.log(json);
-            data.user = json.user;
-        }, 5000);
-
-        return () => clearInterval(interval);
+    onMount(async () => {
+        const resp = await fetch("/app/fullnationinfo", {
+            headers: {
+                "Cookie": data.preparedCookie
+            }
+        });
+        const json = await resp.json();
+        // console.log(json);
+        data.user = json.user;
     });
 
     const collectTaxes = async () => {

@@ -1,11 +1,44 @@
 <script lang="ts">
     import { Avatar } from "@skeletonlabs/skeleton";
     import { DataHandler } from "@vincjo/datatables";
+    import { Toast, getToastStore } from "@skeletonlabs/skeleton";
+    import type { ToastSettings, ToastStore } from "@skeletonlabs/skeleton";
 
     export let data;
     const alliances = data.alliances;
+    const preparedCookie = data.preparedCookie;
     const handler = new DataHandler(alliances, { rowsPerPage: 5 });
     const rows = handler.getRows(); 
+    const toastStore = getToastStore();
+
+    const joinAlliance = async (allianceID: string) => {
+        const response = await fetch("/app/alliance/list/join", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Cookie": preparedCookie
+            },
+            body: JSON.stringify({ 
+                "allianceID": allianceID,
+                "preparedCookie": preparedCookie
+            })
+        });
+        if(response.ok) {
+            const t: ToastSettings = {
+                message: "Joined alliance!",
+                timeout: 2000
+            };
+            toastStore.trigger(t);
+        } else {
+            const json = await response.json();
+            const t: ToastSettings = {
+                message: `${json.message}`,
+                timeout: 2000,
+                background: "variant-filled-error"
+            };
+            toastStore.trigger(t);
+        }
+    }
 </script>
 
 {JSON.stringify(alliances)}
@@ -33,7 +66,7 @@
                                 <span>{alliance.nation.name}</span>
                             </div>
                         </td>
-                        <td><button disabled={alliance.status === "private"} class="btn btn-md variant-filled" on:click={async () => { alert(JSON.stringify(alliance)) }}>Join</button></td>
+                        <td><a class="btn btn-md variant-filled" href="/app/alliance/{alliance.id}">View</a></td>
                     </tr>
                 {/each}
             </tbody>

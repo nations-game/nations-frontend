@@ -35,7 +35,19 @@ export const load: PageServerLoad = async ({ locals, fetch }) => {
     const membersJson = await membersResponse.json();
     alliance.members = membersJson.details;
 
+    let nationRole = "";
+
+    // Check all alliance members, if the nation is in the list set nationRole to its role in the alliance
+    for(let member of alliance.members) {
+        console.log(member.nationID, locals.user.nation.nationID)
+        if(member.nationID == locals.user.nation.nationID) {
+            nationRole = member.alliance_role;
+        }
+    }
+
     return {
-        alliance: alliance
+        preparedCookie: locals.preparedCookie,
+        alliance: alliance,
+        nationRole: nationRole
     };
 };

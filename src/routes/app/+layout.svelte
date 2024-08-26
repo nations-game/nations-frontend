@@ -9,18 +9,14 @@
     $: user = data.user;
 
 
-    onMount(() => {
-        const interval = setInterval(async () => {
-            const resp = await fetch("/app/fullnationinfo", {
-                headers: {
-                    "Cookie": data.preparedCookie
-                }
-            });
-            const json = await resp.json();
-            user = json.user;
-        }, 5000);
-
-        return () => clearInterval(interval);
+    onMount(async () => {
+        const resp = await fetch("/app/fullnationinfo", {
+            headers: {
+                "Cookie": data.preparedCookie
+            }
+        });
+        const json = await resp.json();
+        user = json.user;
     });
 
     const dropdownMenu: PopupSettings  = {
@@ -44,14 +40,18 @@
         <nav class="list-nav">
             <ul>
                 <!--Basic stuff-->
+                Your Stuff
+                <hr class="!border-t-1" />
                 <li><a href="/app">Overview</a></li>
 
                 <!--Build stuff-->
+                Shop
                 <hr class="!border-t-1" />
                 <li><a href="/app/factories">Factories</a></li>
                 <li><a href="/app/buildings">Buildings</a></li>
 
                 <!--Diplomacy-->
+                Diplomacy
                 <hr class="!border-t-1" />
                 <li><a href="/app/alliance">My Alliance</a></li>
                 <li><a href="/app/alliance/list">All Alliances</a></li>
