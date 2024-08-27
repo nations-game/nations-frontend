@@ -99,16 +99,19 @@
                                     <div class="card p-4 shadow-xl" data-popup="popupFeatured">
                                         <div class="btn-group-vertical">
                                             <form method="POST" action="?/kickMember">
+                                                <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
                                                 <input type="hidden" name="nationID" value="{nation.nationID}" />
                                                 <button formaction="?/kickMember">Kick Member</button>
                                             </form>
                             
                                             {#if nationRole === "owner"}
                                                 <form method="POST" action="?/promoteToAdmin">
+                                                    <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
                                                     <input type="hidden" name="nationID" value="{nation.nationID}" />
                                                     <button formaction="?/promoteToAdmin">Promote to Admin</button>
                                                 </form>
                                                 <form method="POST" action="?/transferOwnership">
+                                                    <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
                                                     <input type="hidden" name="nationID" value="{nation.nationID}" />
                                                     <button formaction="?/transferOwnership">Transfer Ownership</button>
                                                 </form>
