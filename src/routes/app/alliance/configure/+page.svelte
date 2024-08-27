@@ -6,12 +6,6 @@
     import { popup } from "@skeletonlabs/skeleton";
     import type { PopupSettings } from "@skeletonlabs/skeleton";
 
-    const popupFeatured: PopupSettings = {
-        event: "click",
-        target: "popupFeatured",
-        placement: "bottom",
-    };
-
     export let data: any;
     const alliance = data.alliance;
     const nationRole = data.nationRole;
@@ -95,20 +89,31 @@
                                 <td>{nation.population}</td>
                                 <td>{nation.alliance_role[0].toUpperCase() + nation.alliance_role.slice(1)}</td>
                                 <td>
-                                    <button class="btn variant-filled right" use:popup={popupFeatured}>Options</button>
-                                    <div class="card p-4 shadow-xl" data-popup="popupFeatured">
+                                    <button class="btn variant-filled right" use:popup={{ event: "click", target: "popupFeatured-" + nation.nationID, placement: "bottom" }}>Options</button>
+                                    <div class="card p-4 shadow-xl" data-popup="popupFeatured-{nation.nationID}">
                                         <div class="btn-group-vertical">
                                             <form method="POST" action="?/kickMember">
+                                                <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
                                                 <input type="hidden" name="nationID" value="{nation.nationID}" />
-                                                <button formaction="?/kickMember">Kick Member</button>
+                                                <button formaction="?/kickMember">Kick Member {nation.nationID}</button>
                                             </form>
                             
                                             {#if nationRole === "owner"}
-                                                <form method="POST" action="?/promoteToAdmin">
-                                                    <input type="hidden" name="nationID" value="{nation.nationID}" />
-                                                    <button formaction="?/promoteToAdmin">Promote to Admin</button>
-                                                </form>
+                                                {#if nation.alliance_role === "member"}
+                                                    <form method="POST" action="?/promoteToAdmin">
+                                                        <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
+                                                        <input type="hidden" name="nationID" value="{nation.nationID}" />
+                                                        <button formaction="?/promoteToAdmin">Promote to Admin</button>
+                                                    </form>
+                                                {:else if nation.alliance_role === "admin"}
+                                                    <form method="POST" action="?/demoteToMember">
+                                                        <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
+                                                        <input type="hidden" name="nationID" value="{nation.nationID}" />
+                                                        <button formaction="?/demoteToMember">Demote to Member</button>
+                                                    </form>
+                                                {/if}
                                                 <form method="POST" action="?/transferOwnership">
+                                                    <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
                                                     <input type="hidden" name="nationID" value="{nation.nationID}" />
                                                     <button formaction="?/transferOwnership">Transfer Ownership</button>
                                                 </form>

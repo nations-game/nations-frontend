@@ -96,6 +96,9 @@
             <div class="flex items-center">
                 <img src="/icons/cg_icon.png" alt="Consumer Goods" class="mr-1">{formatNumber(user.nation.consumerGoods)}
             </div>
+            <div class="flex items-center">
+                <img src="/icons/land_icon.png" alt="Land" class="mr-1">{formatNumber(user.nation.land)} km²
+            </div>
         </div>
     </svelte:fragment>
 </AppShell>

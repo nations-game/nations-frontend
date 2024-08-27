@@ -7,7 +7,7 @@
     import type { ToastSettings, ToastStore } from "@skeletonlabs/skeleton";
     const toastStore = getToastStore();
 
-    export let data;
+    export let data: any;
     const preparedCookie = data.preparedCookie;
     const alliance = data.alliance;
     const nationRole = data.nationRole;

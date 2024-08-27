@@ -15,6 +15,7 @@ export type Nation = {
     buildingMaterials: number;
     metal: number;
     consumerGoods: number;
+    land: number;
 
     pendingTaxes: number;
 
