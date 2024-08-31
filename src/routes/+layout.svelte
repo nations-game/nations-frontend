@@ -8,5 +8,9 @@
     storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 </script>
 
+<svelte:head>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+</svelte:head>
+
 <Toast />
 <slot />

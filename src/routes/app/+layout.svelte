@@ -4,6 +4,7 @@
     import type { User } from "$lib/types/models";
     import { page } from "$app/stores";
     import { onMount } from "svelte";
+    import { formatNumber } from "$lib/utils";
 
     export let data;
     $: user = data.user;
@@ -24,15 +25,6 @@
         target: "dropdownMenu",
         placement: "bottom-end"
     };
-
-    const formatNumber = (num: number) => {
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + "k";
-        } else {
-            return num.toString();
-        }
-    }
-
 </script>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
@@ -49,6 +41,7 @@
                 <hr class="!border-t-1" />
                 <li><a href="/app/factories">Factories</a></li>
                 <li><a href="/app/buildings">Buildings</a></li>
+                <li><a href="/app/upgrades">Upgrades</a></li>
 
                 <!--Diplomacy-->
                 Diplomacy
@@ -97,7 +90,7 @@
                 <img src="/icons/cg_icon.png" alt="Consumer Goods" class="mr-1">{formatNumber(user.nation.consumerGoods)}
             </div>
             <div class="flex items-center">
-                <img src="/icons/land_icon.png" alt="Land" class="mr-1">{formatNumber(user.nation.land)} km²
+                <img src="/icons/land_icon.png" alt="Land" class="mr-1">{formatNumber(user.nation.unusedLand)} km²
             </div>
         </div>
     </svelte:fragment>
