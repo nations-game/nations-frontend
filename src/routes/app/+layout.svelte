@@ -9,15 +9,27 @@
     export let data;
     $: user = data.user;
 
+    let socket
+
 
     onMount(async () => {
-        const resp = await fetch("/app/fullnationinfo", {
-            headers: {
-                "Cookie": data.preparedCookie
+        socket = new WebSocket(`ws://127.0.0.1:8000/ws?${data.preparedCookie}`);
+        socket.onmessage = function(e) {
+            const resp = JSON.parse(e.data)
+            switch(resp.action) {
+                case "nationUpdated":
+                    data.user.nation = resp.nation;
+                    break;
+                case "notificationReceived":
+                    // TODO: Popup when this happens
+                    console.log(resp.notification)
+                    break;
             }
-        });
-        const json = await resp.json();
-        user = json.user;
+        };
+
+        socket.onclose = function(e) {
+            console.error("Websocket closed unexpectedly");
+        };
     });
 
     const dropdownMenu: PopupSettings  = {
