@@ -5,9 +5,11 @@
     import { page } from "$app/stores";
     import { onMount } from "svelte";
     import { formatNumber } from "$lib/utils";
+    import { nation } from "$lib/stores";
 
     export let data;
     $: user = data.user;
+    nation.set(data.user.nation);
 
     let socket
 
@@ -19,10 +21,11 @@
             switch(resp.action) {
                 case "nationUpdated":
                     data.user.nation = resp.nation;
+                    nation.set(resp.nation);
+                    console.log(resp.nation)
                     break;
                 case "notificationReceived":
                     // TODO: Popup when this happens
-                    console.log(resp.notification)
                     break;
             }
         };
@@ -67,9 +70,9 @@
 	<svelte:fragment slot="pageHeader">
         <AppBar>
             <svelte:fragment slot="lead">
-                <Avatar initials="{user.nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
+                <Avatar initials="{$nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
             </svelte:fragment>
-            <h3 class="h3">{user.nation.name}</h3>
+            <h3 class="h3">{$nation.name}</h3>
             <svelte:fragment slot="trail">
                 <!--Not sure what we're going to do with this yet. Probably user settings or mail.-->
                 <button class="btn variant-filled" use:popup={dropdownMenu}>
