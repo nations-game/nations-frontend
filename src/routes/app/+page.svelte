@@ -3,22 +3,17 @@
     import type { ToastSettings } from "@skeletonlabs/skeleton";
     import { getIconFromCommodity } from "$lib/utils";
     import { onMount } from "svelte";
+    import { nation } from "$lib/stores";
 
     const toastStore = getToastStore();
     export let data;
+
+    $: data;
 
     let taxesButtonDisabled = false;
     let collectButtonsDisabled = false;
 
     onMount(async () => {
-        const resp = await fetch("/app/fullnationinfo", {
-            headers: {
-                "Cookie": data.preparedCookie
-            }
-        });
-        const json = await resp.json();
-        // console.log(json);
-        data.user = json.user;
     });
 
     const collectTaxes = async () => {
@@ -84,7 +79,7 @@
 		<div class="absolute opacity-60 bg-black z-[1] inset-0" />
 		<div class="relative z-[1] space-y-6 pt-32 pb-24 text-white">
 			<div class="font-bold text-6xl tracking-tight">
-				{data.user.nation.name}
+				{$nation.name}
 			</div>
 			<p class="max-w-lg md:mx-auto">
 				Welcome to your homepage!
@@ -100,7 +95,7 @@
             <div class="font-bold text-xs">Population</div>
         </div>
         <div class="flex items-baseline space-x-2">
-            <div class="text-2xl font-bold">{data.user.nation.population.toLocaleString("en", { useGrouping: true })}</div>
+            <div class="text-2xl font-bold">{$nation.population.toLocaleString("en", { useGrouping: true })}</div>
         </div>
     </div>
 
@@ -110,7 +105,7 @@
             <div class="font-bold text-xs">Happiness</div>
         </div>
         <div class="flex items-baseline space-x-2">
-            <div class="text-2xl font-bold">{data.user.nation.happiness.toLocaleString("en")}</div>
+            <div class="text-2xl font-bold">{$nation.happiness.toLocaleString("en")}</div>
         </div>
     </div>
 
@@ -120,24 +115,24 @@
             <div class="font-bold text-xs">Pending taxes</div>
         </div>
         <div class="grid grid-cols-2 gap-4 items-baseline space-x-2">
-            <div class="text-2xl font-bold place-self-start">${data.user.nation.pendingTaxes.toLocaleString("en", { useGrouping: true })}</div>
+            <div class="text-2xl font-bold place-self-start">${$nation.pendingTaxes.toLocaleString("en", { useGrouping: true })}</div>
             <button class="btn btn-sm variant-filled" disabled={taxesButtonDisabled} on:click={async () => { await collectTaxes(); }}>Collect</button>
         </div>
     </div>
 </div>
 
-{#if data.user.nation.factories.length > 0}
+{#if $nation.factories.length > 0}
     <h1 class="px-11 text-2xl">
         My Factories
         <button disabled={collectButtonsDisabled} class="btn btn-sm variant-filled" on:click={async () => {
-            for(let factory of data.user.nation.factories) {
+            for(let factory of $nation.factories) {
                 await collectFromFactory(factory.info.id);
                 factory.ticks_run = 0;
             }
         }}>Collect All</button>
     </h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 px-10 py-2">
-        {#each data.user.nation.factories as factory}
+        {#each $nation.factories as factory}
             <div class="card">
                 <header class="card-header text-2xl font-bold">
                     {factory.info.name}

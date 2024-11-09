@@ -1,9 +1,11 @@
 <script lang="ts">
+    import { TabGroup, Tab, TabAnchor } from "@skeletonlabs/skeleton";
     import FactoryComponent from "./FactoryComponent.svelte";
 
     export let data;
     const factories = data.factories;
     const preparedCookie = data.preparedCookie;
+    let tabSet: string = "food";
 
     const categories = [
         ["food", "Food"],
@@ -26,14 +28,17 @@
 </script>
 
 <div class="p-10">
-    {#each categories as [id, fullName]}
-        <div class="pb-5">
-            <h1 class="px-1 pb-1 text-2xl">{fullName}</h1>
+    <TabGroup>
+        {#each categories as [id, fullName]}
+            <Tab bind:group={tabSet} name={fullName} value={id}>{fullName}</Tab>
+        {/each}
+        <!-- Tab Panels --->
+        <svelte:fragment slot="panel">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                {#each getFactoriesByCategory(id) as factory}
+                {#each getFactoriesByCategory(tabSet) as factory}
                     <FactoryComponent {factory} {buildButtonDisabed} {preparedCookie} />
                 {/each}
             </div>
-        </div>
-    {/each}
+        </svelte:fragment>
+    </TabGroup>
 </div>

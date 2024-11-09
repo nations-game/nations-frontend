@@ -4,19 +4,35 @@
     import type { User } from "$lib/types/models";
     import { page } from "$app/stores";
     import { onMount } from "svelte";
+    import { formatNumber } from "$lib/utils";
+    import { nation } from "$lib/stores";
 
     export let data;
     $: user = data.user;
+    nation.set(data.user.nation);
+
+    let socket
 
 
     onMount(async () => {
-        const resp = await fetch("/app/fullnationinfo", {
-            headers: {
-                "Cookie": data.preparedCookie
+        socket = new WebSocket(`ws://127.0.0.1:8000/ws?${data.preparedCookie}`);
+        socket.onmessage = function(e) {
+            const resp = JSON.parse(e.data)
+            switch(resp.action) {
+                case "nationUpdated":
+                    data.user.nation = resp.nation;
+                    nation.set(resp.nation);
+                    console.log(resp.nation)
+                    break;
+                case "notificationReceived":
+                    // TODO: Popup when this happens
+                    break;
             }
-        });
-        const json = await resp.json();
-        user = json.user;
+        };
+
+        socket.onclose = function(e) {
+            console.error("Websocket closed unexpectedly");
+        };
     });
 
     const dropdownMenu: PopupSettings  = {
@@ -24,15 +40,6 @@
         target: "dropdownMenu",
         placement: "bottom-end"
     };
-
-    const formatNumber = (num: number) => {
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + "k";
-        } else {
-            return num.toString();
-        }
-    }
-
 </script>
 
 <AppShell slotSidebarLeft="bg-surface-500/5 w-56 p-4">
@@ -49,6 +56,7 @@
                 <hr class="!border-t-1" />
                 <li><a href="/app/factories">Factories</a></li>
                 <li><a href="/app/buildings">Buildings</a></li>
+                <li><a href="/app/upgrades">Upgrades</a></li>
 
                 <!--Diplomacy-->
                 Diplomacy
@@ -62,9 +70,9 @@
 	<svelte:fragment slot="pageHeader">
         <AppBar>
             <svelte:fragment slot="lead">
-                <Avatar initials="{user.nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
+                <Avatar initials="{$nation.name.charAt(0)}" width="w-10" rounded="rounded-lg" />
             </svelte:fragment>
-            <h3 class="h3">{user.nation.name}</h3>
+            <h3 class="h3">{$nation.name}</h3>
             <svelte:fragment slot="trail">
                 <!--Not sure what we're going to do with this yet. Probably user settings or mail.-->
                 <button class="btn variant-filled" use:popup={dropdownMenu}>
@@ -95,6 +103,9 @@
             </div>
             <div class="flex items-center">
                 <img src="/icons/cg_icon.png" alt="Consumer Goods" class="mr-1">{formatNumber(user.nation.consumerGoods)}
+            </div>
+            <div class="flex items-center">
+                <img src="/icons/land_icon.png" alt="Land" class="mr-1">{formatNumber(user.nation.unusedLand)} km²
             </div>
         </div>
     </svelte:fragment>

@@ -78,74 +78,26 @@ export const actions = {
 
     kickMember: async({ request, cookies, fetch, locals }) => {
         const data = await request.formData();
-        const id = data.get("nationID") as string;
-        const preparedCookie = data.get("preparedCookie") as string;
-
-        const response = await fetch("$api/alliance/admin/kick", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cookie": preparedCookie
-            },
-            body: JSON.stringify({ "id": parseInt(id) })
-        });
-
-        const responseText = await response.text();
-        console.log(responseText)
-
-        if(response.ok) {
-            return redirect(302, "/app/alliance/configure");
-        } else {
-            return fail(400, {
-                error: "Didn't work :("
-            });
-        }
+        const id = data.get("id") as string;
+        return fail(500, {
+            error: `Not implemented (nation ID ${id})`
+        })
     },
 
     promoteToAdmin: async({ request, cookies, fetch, locals }) => {
         const data = await request.formData();
-        const id = data.get("nationID") as string;
-        const preparedCookie = data.get("preparedCookie") as string;
-
-        const response = await fetch("$api/alliance/admin/promote", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cookie": preparedCookie
-            },
-            body: JSON.stringify({ "id": parseInt(id) })
-        });
-
-        if(response.ok) {
-            return redirect(302, "/app/alliance/configure");
-        } else {
-            return fail(400, {
-                error: "Didn't work :("
-            });
-        }
+        const id = data.get("id") as string;
+        return fail(500, {
+            error: `Not implemented (nation ID ${id})`
+        })
     },
 
     transferOwnership: async({ request, cookies, fetch, locals }) => {
         const data = await request.formData();
-        const id = data.get("nationID") as string;
-        const preparedCookie = data.get("preparedCookie") as string;
-
-        const response = await fetch("$api/alliance/admin/transfer", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Cookie": preparedCookie
-            },
-            body: JSON.stringify({ "id": parseInt(id) })
-        });
-
-        if(response.ok) {
-            return redirect(302, "/app/alliance/configure");
-        } else {
-            return fail(400, {
-                error: "Didn't work :("
-            });
-        }
+        const id = data.get("id") as string;
+        return fail(500, {
+            error: `Not implemented (nation ID ${id})`
+        })
     }
     
 } satisfies Actions;

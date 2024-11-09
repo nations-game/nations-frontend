@@ -32,6 +32,7 @@
   "dependencies": {
     "@floating-ui/dom": "^1.6.3",
     "@vincjo/datatables": "^1.14.10",
+    "socket.io-client": "^4.7.5",
     "svelte-hamburgers": "^4.2.0"
   }
 }

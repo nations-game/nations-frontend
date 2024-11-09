@@ -12,5 +12,16 @@ export const getIconFromCommodity = (commodity: string) => {
             return "/icons/metal_icon.png";
         case "consumer_goods":
             return "/icons/cg_icon.png";
+        case "unused_land":
+            return "/icons/land_icon.png";
+    }
+}
+
+
+export const formatNumber = (num: number) => {
+    if (num >= 1000) {
+        return (num / 1000).toFixed(1) + "k";
+    } else {
+        return num.toString();
     }
 }

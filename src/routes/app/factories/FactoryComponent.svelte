@@ -85,7 +85,7 @@
                     <li>
                         <div class="flex items-center">
                             <img src="{getIconFromCommodity(cost.commodity)}" alt="{cost.commodity}" class="mr-1"> 
-                            {cost.quantity}
+                            {cost.quantity} {#if cost.commodity === "unused_land"}km²{/if}
                         </div>
                     </li>
                 {/each}
