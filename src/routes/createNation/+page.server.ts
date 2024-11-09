@@ -6,7 +6,8 @@ export const actions = {
     default: async({ request, cookies, fetch, locals }) => {
         const data = await request.formData();
         const name = data.get("name") as string;
-        const system = data.get("system") as string;
+        const authority = data.get("authority") as string;
+        const economic = data.get("economic") as string;
 
 
         const response = await fetch("$api/nation/create", {
@@ -17,7 +18,8 @@ export const actions = {
             },
             body: JSON.stringify({
                 name,
-                system: Number(system)
+                authority: Number(authority),
+                economic: Number(economic)
             })
         });
 

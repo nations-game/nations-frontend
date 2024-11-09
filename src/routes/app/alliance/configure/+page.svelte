@@ -99,13 +99,6 @@
                                             </form>
                             
                                             {#if nationRole === "owner"}
-<<<<<<< HEAD
-                                                <form method="POST" action="?/promoteToAdmin">
-                                                    <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
-                                                    <input type="hidden" name="nationID" value="{nation.nationID}" />
-                                                    <button formaction="?/promoteToAdmin">Promote to Admin</button>
-                                                </form>
-=======
                                                 {#if nation.alliance_role === "member"}
                                                     <form method="POST" action="?/promoteToAdmin">
                                                         <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
@@ -119,7 +112,6 @@
                                                         <button formaction="?/demoteToMember">Demote to Member</button>
                                                     </form>
                                                 {/if}
->>>>>>> 4c74f75d92509e9a18c2b2bca5a80ea24b1b95cd
                                                 <form method="POST" action="?/transferOwnership">
                                                     <input type="hidden" name="preparedCookie" value="{preparedCookie}" />
                                                     <input type="hidden" name="nationID" value="{nation.nationID}" />

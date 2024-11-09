@@ -1,36 +1,39 @@
 <script lang="ts">
-    import { Stepper, Step, RadioGroup, RadioItem, popup, FileDropzone } from "@skeletonlabs/skeleton";
+    import { Stepper, Step, RangeSlider } from "@skeletonlabs/skeleton";
     import type { PopupSettings } from "@skeletonlabs/skeleton";
     import type { SubmitFunction } from "@sveltejs/kit";
     import { enhance } from "$app/forms";
+    import { PoliticalCompassTest } from "$lib/politicalTest";
+    import { onMount } from "svelte";
+    import type { CompassScore, Question } from "$lib/politicalTest";
 
     let nationName: string;
-    let system: number;
 
-    
-    const popupCapitalism: PopupSettings = {
-        event: "hover",
-        target: "popupCapitalism",
-        placement: "top"
-    };
-    const popupSocialism: PopupSettings = {
-        event: "hover",
-        target: "popupSocialism",
-        placement: "top"
-    };
-    const popupDictatorship: PopupSettings = {
-        event: "hover",
-        target: "popupDictatorship",
-        placement: "top"
-    };
+    let test: PoliticalCompassTest;
+    let currentQuestion: Question | null;
+    let score: CompassScore;
+
+    onMount(() => {
+        test = new PoliticalCompassTest();
+        currentQuestion = test.currentQuestion;
+    });
+
+    function selectAnswer(answerIndex: number) {
+        test.answerQuestion(answerIndex);
+        if (test.hasNextQuestion) {
+            currentQuestion = test.currentQuestion;
+        } else {
+            score = test.getScore();
+            currentQuestion = null;
+        }
+    }
 
     const submitHandle: SubmitFunction = ({ formData, cancel }) => {
-		console.log({ nationName, system });
-
 		if (nationName.length <= 4) cancel();
 
 		formData.set("name", nationName);
-		formData.set("system", `${system}`);
+		formData.set("authority", `${score.authority}`);
+		formData.set("economic", `${score.economic}`);
 	}
 </script>
 
@@ -47,33 +50,39 @@
                         </label>
                     </Step>
                     <Step>
-                        <svelte:fragment slot="header">Choose a government system for your new nation.</svelte:fragment>
-                        Brief description of how system affects nation
-                        Add descriptions for each system on hover <br>
-                        <RadioGroup active="variant-filled-primary" hover="hover:variant-soft-primary">
-                            <div use:popup={popupCapitalism}>
-                                <RadioItem bind:group={system} name="justify" value={0}>Capitalism</RadioItem>
+                        <svelte:fragment slot="header">Next, we have a few questions about your country.</svelte:fragment>
+                        {#if currentQuestion}
+                            <div>
+                                <h2>{currentQuestion.questionText}</h2>
+                                <div class="btn-group-vertical variant-filled w-full">
+                                    {#each currentQuestion.answers as answer, i}
+                                        <button on:click={() => selectAnswer(i)}>
+                                            {answer.text}
+                                        </button>
+                                    {/each}
+                                </div>
                             </div>
-                            <div use:popup={popupSocialism}>
-                                <RadioItem bind:group={system} name="justify" value={1}>Socialism</RadioItem>
+                        {:else if score}
+                            <div>
+                                <h2>Your Results</h2>
+                                <p>Authority Score: {score.authority}</p>
+                                <p>Economic Score: {score.economic}</p>
+
+                                <RangeSlider name="authority-slider" bind:value={score.authority} min={-10} max={10} step={1} disabled={true}>
+                                    <div class="flex justify-between items-center">
+                                        <div class="font-bold">Libertarian</div>
+                                        <div class="font-bold">Authoritarian</div>
+                                    </div>
+                                </RangeSlider>
+
+                                <RangeSlider name="economic-slider" bind:value={score.economic} min={-10} max={10} step={1} disabled={true}>
+                                    <div class="flex justify-between items-center">
+                                        <div class="font-bold">Capitalist</div>
+                                        <div class="font-bold">Communist</div>
+                                    </div>
+                                </RangeSlider>
                             </div>
-                            <div use:popup={popupDictatorship}>
-                                <RadioItem bind:group={system} name="justify" value={2}>Dictatorship</RadioItem>
-                            </div>
-                            
-                            <div data-popup="popupCapitalism" class="card">
-                                <section class="p-4">You have a faster growing economy with the ability to become a world power, but your citizens are generally unhappier.</section>
-                                <div class="arrow" />
-                            </div>
-                            <div data-popup="popupSocialism" class="card">
-                                <section class="p-4">Your citizens are much happier, but your economy grows slower than capitalist nations.</section>
-                                <div class="arrow" />
-                            </div>
-                            <div data-popup="popupDictatorship" class="card">
-                                <section class="p-4">You rule your citizens with an iron fist, prioritizing only industry and military. Your citizens are generally unhappy.</section>
-                                <div class="arrow" />
-                            </div>
-                        </RadioGroup>
+                        {/if}
                     </Step>
                     <Step>
                         <svelte:fragment slot="header">Upload a flag!</svelte:fragment>
